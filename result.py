@@ -7,19 +7,19 @@ from matplotlib.patches import Circle
 
 #setting values for our rockets and environment
 first_stage = Rocket(
-    mass_empty = 1300+250+470,
-    fuel_mass = 9700,
-    thrust = 162000,
-    burn_rate = 9700 / 150,    
-    area = 3.1416 * (1.2 / 2)**2  
+    mass_empty = 25600 + 4000 + 6200,
+    fuel_mass = 385000,   
+    thrust = 7607000,         
+    burn_rate = 2500,            
+    area = 3.66 ** 2 * 3.1416 / 4    
 )
 
 second_stage = Rocket(
-    mass_empty = 250,
-    fuel_mass = 470,
-    thrust = 25800,            
-    burn_rate = 3.47222,   
-    area = 3.1416 * (1.2 / 2)**2  
+    mass_empty = 4000,
+    fuel_mass = 6200, 
+    thrust = 934000,    
+    burn_rate = 250, 
+    area = 3.66 ** 2 * 3.1416 / 4
 )
 
 environment = Environment(
@@ -81,14 +81,16 @@ while True:
 
     #second stage operation
     if first_stage.fuel_mass < 1:
+        #start second stage with initialization
         if len(second_stage_positions) == 0:
             separation_altitude = ((np.linalg.norm((first_stage.position)) - environment.planet_radius) / 1000)
             second_stage.position = first_stage.position.copy()
             second_stage.velocity = first_stage.velocity.copy()
-            second_stage.set_angle(angle=np.radians(195))
+            second_stage.set_angle(angle=np.radians(208))
 
-        
         altitude2 = np.linalg.norm(second_stage.position) - environment.planet_radius
+        
+        speed = np.linalg.norm(second_stage.velocity)
 
         second_stage.burn(dt=dt)
         thrust = second_stage.thrust_vector()

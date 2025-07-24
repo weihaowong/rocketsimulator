@@ -2,7 +2,7 @@ A copy of different rocket data to be replaced into the calculate_drag_force
 
 Falcon 9:
 first_stage = Rocket(
-    mass_empty = 25600 + 4000 + 6600,
+    mass_empty = 25600 + 4000 + 6200,
     fuel_mass = 385000,   
     thrust = 7607000,         
     burn_rate = 2500,            
@@ -11,7 +11,7 @@ first_stage = Rocket(
 
 second_stage = Rocket(
     mass_empty = 4000,
-    fuel_mass = 6600, 
+    fuel_mass = 6200, 
     thrust = 934000,    
     burn_rate = 250, 
     area = 3.66 ** 2 * 3.1416 / 4
@@ -22,7 +22,7 @@ equation = y = 1.05**(x-250)
 
 Electron:
 first_stage = Rocket(
-    mass_empty = 1300+250+470,
+    mass_empty = 1300+250+460,
     fuel_mass = 9700,
     thrust = 162000,
     burn_rate = 9700 / 150,    
@@ -31,7 +31,7 @@ first_stage = Rocket(
 
 second_stage = Rocket(
     mass_empty = 250,
-    fuel_mass = 470,
+    fuel_mass = 460,
     thrust = 25800,            
     burn_rate = 3.47222,   
     area = 3.1416 * (1.2 / 2)**2  
