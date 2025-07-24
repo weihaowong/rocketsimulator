@@ -6,20 +6,22 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 
 #setting values for our rockets and environment
+
 first_stage = Rocket(
-    mass_empty = 25600 + 4000 + 6200,
-    fuel_mass = 385000,   
-    thrust = 7607000,         
-    burn_rate = 2500,            
-    area = 3.66 ** 2 * 3.1416 / 4    
+    mass_empty = 3000+200+3385,           # kg
+    fuel_mass = 30150,           # kg
+    thrust = 318000,             # N
+    burn_rate = 178.3,           # kg/s (approx: fuel_mass / burn_time)
+    area = 1.68                  # m^2 (approx diameter of 1.68 m)
 )
 
+# Falcon 1 Second Stage
 second_stage = Rocket(
-    mass_empty = 4000,
-    fuel_mass = 6200, 
-    thrust = 934000,    
-    burn_rate = 250, 
-    area = 3.66 ** 2 * 3.1416 / 4
+    mass_empty = 200,            # kg
+    fuel_mass = 3385,            # kg
+    thrust = 31000,              # N
+    burn_rate = 11.28,           # kg/s (approx: fuel_mass / burn_time)
+    area = 1.68                  # m^2 (same diameter as first stage)
 )
 
 environment = Environment(
@@ -33,9 +35,6 @@ angle = Angle()
 
 #initializations
 dt = 0.1
-
-trail_x = []
-trail_y = []
 
 x_value = 0
 rocket_angle = 0
@@ -68,6 +67,7 @@ while True:
     net_force = thrust + drag + gravitational_force
     first_stage.update(net_force=net_force, dt=dt)
 
+    #gravity turn method
     if rocket_angle <= 90:
         rocket_angle = angle.angle_function(x_value=x_value)
         first_stage.set_angle(angle=np.radians(90+rocket_angle))
@@ -86,7 +86,7 @@ while True:
             separation_altitude = ((np.linalg.norm((first_stage.position)) - environment.planet_radius) / 1000)
             second_stage.position = first_stage.position.copy()
             second_stage.velocity = first_stage.velocity.copy()
-            second_stage.set_angle(angle=np.radians(208))
+            second_stage.set_angle(angle=np.radians(175))
 
         altitude2 = np.linalg.norm(second_stage.position) - environment.planet_radius
         
@@ -105,8 +105,11 @@ while True:
         second_stage_altitudes.append(altitude2/1000)
         second_stage_speeds.append(np.linalg.norm(second_stage.velocity))
 
+        second_stage_apogee = max(second_stage_altitudes)
+
     time_elapsed += dt
-    if time_elapsed > 10000 or altitude2 < 0:
+
+    if time_elapsed > 6000 or altitude2 < 0:
         break
 
 first_stage_positions = np.array(first_stage_positions)
@@ -116,7 +119,6 @@ y1 = first_stage_positions[:, 1]
 second_stage_positions = np.array(second_stage_positions)
 x2 = second_stage_positions[:, 0]
 y2 = second_stage_positions[:, 1]
-
 
 ###trajectory plot
 plt.figure(figsize=(10, 10))

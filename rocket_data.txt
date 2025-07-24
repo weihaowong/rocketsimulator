@@ -39,3 +39,24 @@ second_stage = Rocket(
 
 angle = 195
 equation = y = 1.05**(x-400)
+
+Falcon 1
+first_stage = Rocket(
+    mass_empty = 3000+200+3385,           # kg
+    fuel_mass = 30150,           # kg
+    thrust = 318000,             # N
+    burn_rate = 178.3,           # kg/s (approx: fuel_mass / burn_time)
+    area = 1.68                  # m^2 (approx diameter of 1.68 m)
+)
+
+# Falcon 1 Second Stage
+second_stage = Rocket(
+    mass_empty = 200,            # kg
+    fuel_mass = 3385,            # kg
+    thrust = 31000,              # N
+    burn_rate = 11.28,           # kg/s (approx: fuel_mass / burn_time)
+    area = 1.68                  # m^2 (same diameter as first stage)
+)
+
+angle = 175
+y = 1.05**(x-500)
