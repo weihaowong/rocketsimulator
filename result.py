@@ -7,19 +7,19 @@ from matplotlib.patches import Circle
 
 #setting values for our rockets and environment
 first_stage = Rocket(
-    mass_empty = 25600 + 4000 + 3000,   # kg (first stage dry + second stage dry + fuel)
-    fuel_mass = 385000,                 # kg (RP-1 + LOX for first stage)
-    thrust = 7607000,                   # N (sea-level thrust from 9 Merlin 1D engines)
-    burn_rate = 2500,                   # kg/s (approximate)
-    area = 3.66 ** 2 * 3.1416 / 4       # m² (diameter ~3.66 m)
+    mass_empty = 1300+250+1250,
+    fuel_mass = 9700,
+    thrust = 162000,
+    burn_rate = 9700 / 150,    
+    area = 3.1416 * (1.2 / 2)**2  
 )
 
 second_stage = Rocket(
-    mass_empty = 4000,             # kg (dry mass)
-    fuel_mass = 6000,             # kg (RP-1 + LOX)
-    thrust = 934000,               # N (vacuum thrust from 1 Merlin 1D Vacuum engine)
-    burn_rate = 250,               # kg/s (approximate)
-    area = 3.66 ** 2 * 3.1416 / 4  # m² (same diameter as first stage)
+    mass_empty = 250,
+    fuel_mass = 470,
+    thrust = 25800,            
+    burn_rate = 3.47222,   
+    area = 3.1416 * (1.2 / 2)**2  
 )
 
 environment = Environment(
@@ -80,9 +80,10 @@ while True:
     #second stage operation
     if first_stage.fuel_mass < 1:
         if len(second_stage_positions) == 0:
+            print(np.linalg.norm(first_stage.position) - environment.planet_radius)
             second_stage.position = first_stage.position.copy()
             second_stage.velocity = first_stage.velocity.copy()
-            second_stage.set_angle(angle=np.radians(213))
+            second_stage.set_angle(angle=np.radians(190))
 
         
         altitude2 = np.linalg.norm(second_stage.position) - environment.planet_radius

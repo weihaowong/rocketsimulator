@@ -10,7 +10,7 @@ class Angle:
         pass
     def angle_function(self, x_value):
         x = sy.symbols("x")
-        y = 1.05**(x-250)
+        y = 1.05**(x-400)
         gf = sy.diff(y, x)
         m = gf.subs(x, x_value)
         return(np.degrees(np.arctan(float(m))))
