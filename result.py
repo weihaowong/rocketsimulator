@@ -7,7 +7,7 @@ from matplotlib.patches import Circle
 
 #setting values for our rockets and environment
 first_stage = Rocket(
-    mass_empty = 1300+250+1250,
+    mass_empty = 1300+250+470,
     fuel_mass = 9700,
     thrust = 162000,
     burn_rate = 9700 / 150,    
@@ -50,6 +50,8 @@ second_stage_speeds = []
 
 time_elapsed = 0
 
+separation_altitude = 0
+
 #main loop for simulation
 while True:
 
@@ -80,10 +82,10 @@ while True:
     #second stage operation
     if first_stage.fuel_mass < 1:
         if len(second_stage_positions) == 0:
-            print(np.linalg.norm(first_stage.position) - environment.planet_radius)
+            separation_altitude = ((np.linalg.norm((first_stage.position)) - environment.planet_radius) / 1000)
             second_stage.position = first_stage.position.copy()
             second_stage.velocity = first_stage.velocity.copy()
-            second_stage.set_angle(angle=np.radians(190))
+            second_stage.set_angle(angle=np.radians(195))
 
         
         altitude2 = np.linalg.norm(second_stage.position) - environment.planet_radius
@@ -113,7 +115,8 @@ second_stage_positions = np.array(second_stage_positions)
 x2 = second_stage_positions[:, 0]
 y2 = second_stage_positions[:, 1]
 
-###main plot of trajectory
+
+###trajectory plot
 plt.figure(figsize=(10, 10))
 ax = plt.gca()
 earth = Circle((0, 0), environment.planet_radius, color='cyan', zorder=0)
@@ -129,23 +132,24 @@ ax.autoscale_view()
 plt.title("Trajectory")
 plt.legend()
 
-###plot for individual properties
+
+###telemetry plot
 time1 = [i * dt for i in range(len(first_stage_altitudes))]
 time2 = [i * dt for i in range(len(second_stage_altitudes))]
 time3 = [i * dt for i in range(len(first_stage_speeds))]
 time4 = [i * dt for i in range(len(second_stage_speeds))]
 
-fig, axs = plt.subplots(2, 2, figsize=(12, 10))  # 3 rows, 1 column
+fig, axs = plt.subplots(3, 2, figsize=(12, 10))
 
 axs[0,0].plot(time1, first_stage_altitudes)
 axs[0,0].set_title("First Stage Altitude vs Time")
 axs[0,0].set_xlabel("Time (s)")
-axs[0,0].set_ylabel("Altitude (m)")
+axs[0,0].set_ylabel("Altitude (km)")
 
 axs[0,1].plot(time2, second_stage_altitudes)
 axs[0,1].set_title("Second Stage Altitude vs Time")
 axs[0,1].set_xlabel("Time (s)")
-axs[0,1].set_ylabel("Altitude (m)")
+axs[0,1].set_ylabel("Altitude (km)")
 
 axs[1,0].plot(time3, first_stage_speeds)
 axs[1,0].set_title("First Stage Speed vs Time")
@@ -156,6 +160,25 @@ axs[1,1].plot(time4, second_stage_speeds)
 axs[1,1].set_title("Second Stage Speed vs Time")
 axs[1,1].set_xlabel("Time (s)")
 axs[1,1].set_ylabel("Speed (ms^-1)")
+
+axs[2, 0].axis('off')
+axs[2, 1].axis('off')
+
+telemetry1 =  f"""
+First Stage:
+Apogee: {max(first_stage_altitudes)} km
+Max Speed: {max(first_stage_speeds)} ms-1
+Separation Altitude: {separation_altitude} km"""
+
+telemetry2 = f"""
+Second Stage:
+Apogee: {max(second_stage_altitudes)} km
+Perigee: {min(second_stage_altitudes)} km
+Max Speed: {max(second_stage_speeds)} ms-1
+Average Speed: {(sum(second_stage_speeds) / len(second_stage_speeds))} ms-1"""
+
+axs[2, 0].text(0.01, 1.0, telemetry1, fontsize=10, va='top', ha='left', linespacing=1.4, wrap=True)
+axs[2, 1].text(0.01, 1.0, telemetry2, fontsize=10, va='top', ha='left', linespacing=1.4, wrap=True)
 
 plt.tight_layout()
 plt.show()
